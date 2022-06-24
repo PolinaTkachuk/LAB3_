@@ -11,11 +11,13 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    DatabaseJson.cpp \
     chart.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
+    DatabaseJson.h \
     IOC.h \
     chart.h \
     mainwindow.h
