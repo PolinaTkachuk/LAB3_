@@ -5,7 +5,7 @@
 #include<QBarSeries>
 #include <QtCharts/QBarSet>
 #include<QChart>
-//#include "IOC.h"
+#include "IOC.h"
 #include <QString>
 #include <QPair>
 #include <QVector>
@@ -40,6 +40,7 @@ class createPieChart: public IntrfaceDraw
 public:
     ~createPieChart() = default;
     QChart* Draw(const Containerdata_& data_) override;
+
 };
 
 class createBarChart: public IntrfaceDraw
@@ -51,6 +52,20 @@ public:
     QChart* Draw(const Containerdata_& data_) override;
 };
 
+
+class Chart
+{
+public:
+
+    Chart() = default;
+    virtual ~Chart() = default;
+
+    QChart* getChart();
+
+    void drawingChart(const QString& title, const Containerdata_& data);//рисование графика на основе переданных данных
+    void ReDrawingChart(); //перерисовка графика
+
+};
 
 
 #endif // CHART_H

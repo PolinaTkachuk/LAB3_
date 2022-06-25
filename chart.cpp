@@ -74,3 +74,10 @@ QChart* createBarChart::Draw(const Containerdata_& data_)
        //chartView->setChart(chart);
 
 }
+/*
+
+ void Chart::ReDrawingChart()
+ {
+     gContainer.GetObject<IntrfaceDraw>()->drawChart();
+
+ }*/

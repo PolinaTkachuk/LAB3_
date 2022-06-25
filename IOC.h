@@ -154,7 +154,7 @@ IOCContainer gContainer;//будем использовать, единстве�
 
 //Иницализация не нулевым значением
 
-//int IOCContainer::s_typeId = 121;
+int IOCContainer::s_typeId = 121;
 
 
 #endif // IOC_H

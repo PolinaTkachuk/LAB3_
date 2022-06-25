@@ -37,9 +37,11 @@ enum TypeChart
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-private slots:
 
-    //void ColoredSlot();
+private slots:
+    void PrintSlot();//печать в pdf при откр директории
+    void TypeChartSlot();//Перерисовка графика в зависимости от тип графика из списка
+    void ColoredSlot();
     //void on_selectionChangedSlot(const QItemSelection &selected, const QItemSelection &deselected);
     //void on_select_comboboxOnChangedSlot(const int index);
 
@@ -77,6 +79,7 @@ private:
     QLabel * typeChart_label;//для подписик к списку
 
     QChartView *chartView;
+    QChart* chart;
 };
 
 #endif // MAINWINDOW_H
