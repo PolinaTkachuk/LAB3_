@@ -24,6 +24,7 @@
 #include"chart.h"
 #include<QSplitter>
 #include<QDir>
+#include "IOC.h"
 
 //виды диаграмм
 enum TypeChart

@@ -4,7 +4,7 @@
 
 //Иницализация не нулевым значением
 
-int IOCContainer::s_typeId = 121;
+//int IOCContainer::s_typeId = 121;
 
 MainWindow::MainWindow(QWidget *parent)
     :  QMainWindow(parent)
@@ -46,8 +46,9 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     // рисуем по умолчанию график типа bar.
-    //метод будет возвращать один экземпляр  объекта  для каждого вызова
-   IOCContainer::IOCContainerInstance().RegisterInstance<IntrfaceDraw,createBarChart>();
+    //метод RegisterInstance будет возвращать один экземпляр  объекта  для каждого вызова
+    //ранее объявили этот экземпляр IOCContainer gContainer;
+    gContainer.RegisterInstance<IntrfaceDraw,createBarChart>();
 
     //черно-белый - определяем чекбокс
     BlackWhiteCheck = new QCheckBox("Черно-белый график");
