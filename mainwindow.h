@@ -21,11 +21,19 @@
 #include<QPagedPaintDevice>
 #include <QtCharts/QChartView>
 #include<QTableWidget>
-//#include"chart.h"
+#include"chart.h"
 #include<QSplitter>
+#include<QDir>
 
+//виды диаграмм
+enum TypeChart
+{
+    Pie,
+    Bar
 
-class MainWindow : public QWidget//
+};
+
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 private slots:
@@ -36,13 +44,15 @@ private slots:
 
     //void selectInTableSlot(const QItemSelection &selected, const QItemSelection &deselected);
 private:
-    void connectSignals();
+    //void connectSignals();
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
     bool Colored();
 
 private:
+     QComboBox *createTypeBox();//для названий из выпад списка
+
     QFileSystemModel *fileModel;
     QFileSystemModel *dirModel;
     QTreeView *treeView;
@@ -51,14 +61,21 @@ private:
     QCheckBox *checkbox;
     QComboBox *combobox;
     QLabel *label, *label_path;
-    QVBoxLayout *tableLayout;
-    QHBoxLayout *tableButtonLayout;
+
+    //раскладки
+    QVBoxLayout *VertLayout;
+    QHBoxLayout *HorizLayout;
+
+    QSplitter* splitterH= new QSplitter(Qt::Horizontal);
+    QSplitter* splitterV = new QSplitter(Qt::Vertical);;
 
     //DataTable new_dataTable; //табличное представление
     QComboBox *typeChart; //список- тип графика
     QCheckBox *BlackWhiteCheck; //чекбокс черно-белый
     QPushButton *printChart;//кнопка печати
+    QLabel * typeChart_label;//для подписик к списку
 
     QChartView *chartView;
 };
+
 #endif // MAINWINDOW_H

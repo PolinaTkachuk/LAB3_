@@ -5,17 +5,17 @@
 #include<QBarSeries>
 #include <QtCharts/QBarSet>
 #include<QChart>
-#include "IOC.h"
-#include"mainwindow.h"
+//#include "IOC.h"
 #include <QString>
 #include <QPair>
 #include <QVector>
 #include<QChartView>
 #include <QtCharts/QStackedBarSeries>
+#include"DatabaseJson.h"
 
-typedef QPair<float,QString> Data_;//из контейнерa берем
+//typedef QPair<QString,double> Data_;//из контейнерa берем
 //typedef QVector< QPair<float,QString> > ContainerData_;
-using Containerdata_ = QVector< QPair<QString, double> >;
+//using Containerdata_ = QVector< QPair<QString, double> >;
 
 
 // Определяем классы работы с графиками так, как показано на примерах в файле с ioc контейнером moodle
@@ -25,20 +25,17 @@ class IntrfaceDraw
 {
 private:
    Containerdata_ data_;
-   //QChartView *chartView=nullptr;
-   //bool Colored=false;
-
 public:
 
     virtual ~IntrfaceDraw()=default;
     virtual QChart* Draw(const Containerdata_& data_) = 0;//построение графика на основе входных данных (бд,json)
-    //IntrfaceDraw(QWidget* parent = nullptr);
+
 };
 
 
 class createPieChart: public IntrfaceDraw
 {
-    bool Colored=false;
+    bool BlackWhiteCheck=false;
     QChartView *chartView=nullptr;
 public:
     ~createPieChart() = default;
@@ -47,7 +44,7 @@ public:
 
 class createBarChart: public IntrfaceDraw
 {
-    bool Colored=false;
+    bool BlackWhiteCheck=false;
     QChartView *chartView=nullptr;
 public:
     ~createBarChart() = default;

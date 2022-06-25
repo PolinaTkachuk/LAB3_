@@ -18,7 +18,7 @@ QChart* createPieChart::Draw(const Containerdata_& data_)
                 slice->setLabelVisible();
                 slice->setExploded();
               }*/
-            if (Colored)
+            if (BlackWhiteCheck)
             {
                //QConicalGradient::QConicalGradient(qreal cx, qreal cy, qreal angle)
                 //Интерполировать цвета вокруг центральной точки (QConicalGradient)- круговой
@@ -53,7 +53,7 @@ QChart* createBarChart::Draw(const Containerdata_& data_)
        {
            //QBarSet *set = new QBarSet("Bar set " + QString::number(i));
            QBarSet *set = new QBarSet(data_[i].first);
-           if (Colored)
+           if (BlackWhiteCheck)
            {
                QLinearGradient gradient(0, 0, chartView->width(), chartView->height());
                gradient.setColorAt(0, Qt::black);

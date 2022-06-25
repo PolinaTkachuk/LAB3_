@@ -116,7 +116,8 @@ public:
         RegisterFunctor(std::function<std::shared_ptr<TInterface>(std::shared_ptr<TS> ...ts)>(functor));
     }
 
-    static IOCContainer& IOCContainerInstance()//для получения единственного экземпляра объекта
+
+    static IOCContainer& IOCInstance()//для получения единственного экземпляра объекта
         {
             static IOCContainer ioc_;
             return ioc_;
@@ -149,6 +150,11 @@ public:
 
 };
 
-IOCContainer gContainer;
+IOCContainer gContainer;//будем использовать, единственный экземпляр
+
+//Иницализация не нулевым значением
+
+//int IOCContainer::s_typeId = 121;
+
 
 #endif // IOC_H
