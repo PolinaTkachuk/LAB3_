@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-//#include"IOC.h"
+#include"IOC.h"
 #include "ui_mainwindow.h"
 
 //Иницализация не нулевым значением
@@ -26,10 +26,22 @@ MainWindow::MainWindow(QWidget *parent)
    dirModel->setRootPath(homePath); //указываем корневую папку
 
    //определяем раскладки для виджетов и для файлов
-   auto layoutAllH= new QHBoxLayout(this);//основной для размещения всего Горизонтально
-   auto layoutAllV= new QVBoxLayout();// вертикально
-   auto layoutWidgetH=new QHBoxLayout();// для виджетов
-   auto layoutFileV=QVBoxLayout();// для директорий
+   btnPrint = new QPushButton("Печать Графика");
+   btnDirectory = new QPushButton("Открыть Директорию");
+
+   //определяем раскладки для виджетов и для файлов
+   HParent = new QHBoxLayout(this);//основной для размещения всего Горизонтально
+   VertLayout = new QVBoxLayout();// вертикально
+   layoutWidgetH=new QHBoxLayout();// для виджетов
+   layoutFileV=new QVBoxLayout();// для директорий
+
+   verticalL = new QVBoxLayout();
+   verticalR = new QVBoxLayout();
+
+   HParent->addLayout(verticalL);
+   HParent->addLayout(verticalR);
+
+   horizWrapper = new QHBoxLayout();
 
    //работаем с выпадающим списком
 
@@ -55,20 +67,22 @@ MainWindow::MainWindow(QWidget *parent)
     //табличное представление
 
     tableView = new QTableView;
-    tableView->setModel(fileModel);
-    tableView->setRootIndex(fileModel->setRootPath(homePath));
-    splitterH->addWidget(tableView);
-    splitterV->addWidget(chart_view);
+    tableView->setModel(dirModel);
+    splitterL->addWidget(tableView);
+    splitterR->addWidget(chart_view);
 
+    verticalL->addWidget(btnDirectory);
+    verticalL->addWidget(splitterL);
+    verticalR->addLayout(layoutWidgetH);
+    verticalR->addWidget(splitterR);
 
     // create layout добавл виджетов на горизонт и верт раскладки
     layoutWidgetH->addWidget(typeChart_label);
     layoutWidgetH->addWidget(typeChart);
     layoutWidgetH->addWidget(BlackWhiteCheck);
-    layoutWidgetH->addWidget(printChart);
-    layoutWidgetH->addStretch();
-    layoutAllV->addLayout(layoutWidgetH);
+    layoutWidgetH->addWidget(btnPrint);
 
+    layoutWidgetH->addStretch();
     // Изначально- графики цветные
     BlackWhiteCheck->setChecked(false);
 
@@ -83,7 +97,16 @@ MainWindow::MainWindow(QWidget *parent)
     */
      QItemSelectionModel *selectionModel = tableView->selectionModel();
 
+     connect(btnDirectory, SIGNAL(clicked()), this, SLOT(ChangeDirectory()));
+     connect(btnPrint, SIGNAL(clicked()), this, SLOT(PrintSlot()));
 
+     connect(
+                 selectionModel,
+                 SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
+                 this,
+                 SLOT(SelectionChangedSlot(const QItemSelection &, const QItemSelection &))
+                 );
+     connect(typeChart, SIGNAL(currentIndexChanged(int)), this, SLOT(onComboboxChangedSlot()));
 
 }
 
@@ -135,6 +158,52 @@ void MainWindow::PrintSlot()
 
 }
 
+void MainWindow::SelectionChangedSlot(const QItemSelection &selected, const QItemSelection &deselected) {
+    Q_UNUSED(deselected);
+
+    QModelIndexList indexes =  selected.indexes();
+    if (indexes.count() < 1)
+    {
+        return;
+    }
+
+    QString filePath = "";
+    filePath = dirModel->filePath(indexes.constFirst());
+
+    bool isExpectedFile = true
+            && (filePath.endsWith(".sqlite")
+            || filePath.endsWith(".json"));
+    if (!isExpectedFile)
+    {
+//        chartManipulation.chart->cleanSeries();
+        isChartAvailable = false;
+//        messageBox{"Expect .json or .sqlite"};
+        return;
+    }
+    if (filePath.endsWith(".sqlite")) {
+        gContainer.RegisterInstance<Idata, dataSql>();
+    }
+    else if (filePath.endsWith(".josn")) {
+        gContainer.RegisterInstance<Idata, dataJSON>();
+    }
+
+    QString chartType = typeChart->currentText();
+    if (chartType == "Pie") {
+        gContainer.RegisterInstance<IntrfaceDraw, createPieChart>();
+        isChartAvailable = true;
+    }
+    else if (chartType == "Bar") {
+        gContainer.RegisterInstance<IntrfaceDraw, createBarChart>();
+        isChartAvailable = true;
+    }
+    auto bamp = gContainer.GetObject<IntrfaceDraw>();
+    auto data = gContainer.GetObject<Idata>();
+    Containerdata_ gettedData = data->getData(filePath);
+    bamp->Draw(gettedData);
+//    bamp->Draw(gContainer.GetObject<Idata>()->getData(filePath);
+    chartView->setChart(bamp->getChart());
+}
+
 void MainWindow::TypeChartSlot()
 {
     QString chartType{typeChart->currentText()};
@@ -153,6 +222,20 @@ void MainWindow::TypeChartSlot()
         }
 
 }
+
+
+void MainWindow::ChangeDirectory() {
+    QFileDialog dialog{this};
+    dialog.setFileMode(QFileDialog::Directory);
+    QString currentPath;
+    if ( dialog.exec() )
+    {
+        currentPath = dialog.selectedFiles().first();
+//        labelsOutput.labelPath->setText(labelsOutput.serialize(currentPath));
+    }
+    tableView->setRootIndex(dirModel->setRootPath(currentPath));
+}
+
 
 MainWindow::~MainWindow()
 {
