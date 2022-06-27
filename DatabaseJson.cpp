@@ -25,7 +25,7 @@ Containerdata_ dataSql::getData (const QString& filePath)
           int i=0;
            QVector<Data_> data_;
           //делаем селект к выбранной базе данных с корректным кратким  именем
-          QSqlQuery query("SELECT VALUE, TIME FROM " + name_, db);
+            QSqlQuery query("SELECT * FROM " + name_, db);
           while (query.next() && i < 8)//проходим по всем данным бд
           {
               i++;//учёт только значимых данных, после 8го идут незначимые
@@ -66,7 +66,7 @@ Containerdata_ dataJSON::getData (const QString& filePath)
         //формируем список с этими значениями
         QListIterator<QString> iterator(val);
          int i = 0;
-           while (iterator.hasNext() && i < 10) //проходим по всем значимым значениям, незначимые после 8ми
+           while (iterator.hasNext() && i < 8) //проходим по всем значимым значениям, незначимые после 8ми
            {
                QString key = iterator.next();
                double value = Obj_json.value(key).toDouble();// расчет значения

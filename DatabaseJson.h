@@ -16,6 +16,7 @@ using Containerdata_ = QVector< QPair<QString, double> >;
 //общий интерфейс - получ данных абстрактного типа
 class Idata
 {
+public:
     virtual Containerdata_ getData(const QString&) //получение данных(еще нет типа) с помощью контейнера
     {
         return QVector<Data_>{};

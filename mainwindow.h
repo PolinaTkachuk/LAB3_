@@ -41,10 +41,11 @@ class MainWindow : public QMainWindow
 private slots:
     void PrintSlot();//печать в pdf при откр директории
     void TypeChartSlot();//Перерисовка графика в зависимости от тип графика из списка
-    void ColoredSlot();
-    //void on_selectionChangedSlot(const QItemSelection &selected, const QItemSelection &deselected);
-    //void on_select_comboboxOnChangedSlot(const int index);
-
+    void ChangeDirectory();
+       void SelectionChangedSlot(const QItemSelection &, const QItemSelection &);
+       //    void ColoredSlot();
+       //void on_selectionChangedSlot(const QItemSelection &selected, const QItemSelection &deselected);
+       void onComboboxChangedSlot();
     //void selectInTableSlot(const QItemSelection &selected, const QItemSelection &deselected);
 private:
     //void connectSignals();
@@ -61,6 +62,7 @@ private:
     QTreeView *treeView;
     QTableView *tableView;
     QPushButton *btnPrint;
+    QPushButton *btnDirectory;
     QCheckBox *checkbox;
     QComboBox *combobox;
     QLabel *label, *label_path;
@@ -68,9 +70,16 @@ private:
     //раскладки
     QVBoxLayout *VertLayout;
     QHBoxLayout *HorizLayout;
+    //раскладки
+        QHBoxLayout *HParent;
+        QHBoxLayout *layoutWidgetH;
+        QVBoxLayout *layoutFileV;
+        QVBoxLayout *verticalL;
+        QVBoxLayout *verticalR;
+        QHBoxLayout *horizWrapper;
 
-    QSplitter* splitterH= new QSplitter(Qt::Horizontal);
-    QSplitter* splitterV = new QSplitter(Qt::Vertical);;
+    QSplitter* splitterL= new QSplitter(Qt::Horizontal);
+    QSplitter* splitterR = new QSplitter(Qt::Vertical);;
 
     //DataTable new_dataTable; //табличное представление
     QComboBox *typeChart; //список- тип графика
@@ -80,6 +89,8 @@ private:
 
     QChartView *chartView;
     QChart* chart;
+
+    bool isChartAvailable = false;
 };
 
 #endif // MAINWINDOW_H

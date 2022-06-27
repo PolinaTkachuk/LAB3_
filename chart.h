@@ -29,6 +29,7 @@ public:
 
     virtual ~IntrfaceDraw()=default;
     virtual QChart* Draw(const Containerdata_& data_) = 0;//построение графика на основе входных данных (бд,json)
+    virtual QChart *getChart() = 0;
 
 };
 
@@ -37,9 +38,11 @@ class createPieChart: public IntrfaceDraw
 {
     bool BlackWhiteCheck=false;
     QChartView *chartView=nullptr;
+    QChart* chart = new QChart();
 public:
     ~createPieChart() = default;
     QChart* Draw(const Containerdata_& data_) override;
+    QChart *getChart() {return chart;}
 
 };
 
@@ -47,9 +50,11 @@ class createBarChart: public IntrfaceDraw
 {
     bool BlackWhiteCheck=false;
     QChartView *chartView=nullptr;
+   QChart* chart = new QChart();
 public:
     ~createBarChart() = default;
     QChart* Draw(const Containerdata_& data_) override;
+    QChart *getChart() {return chart;}
 };
 
 
