@@ -24,7 +24,6 @@
 #include"chart.h"
 #include<QSplitter>
 #include<QDir>
-#include "IOC.h"
 
 //виды диаграмм
 enum TypeChart
@@ -34,63 +33,59 @@ enum TypeChart
 
 };
 
-class MainWindow : public QMainWindow
+class MainWindow : public QWidget
 {
     Q_OBJECT
 
-private slots:
-    void PrintSlot();//печать в pdf при откр директории
+private slots://слоты
+    void PrintSlot();//печать в pdf
     void TypeChartSlot();//Перерисовка графика в зависимости от тип графика из списка
-    void ChangeDirectory();
-       void SelectionChangedSlot(const QItemSelection &, const QItemSelection &);
-       //    void ColoredSlot();
-       //void on_selectionChangedSlot(const QItemSelection &selected, const QItemSelection &deselected);
-       void onComboboxChangedSlot();
-    //void selectInTableSlot(const QItemSelection &selected, const QItemSelection &deselected);
-private:
-    //void connectSignals();
+    void ChangeDirectory();// выбор директории, чтоб открыть папку с файлами бд или json. Левая часть окна
+    void SelectionChangedSlot(const QItemSelection &, const QItemSelection &);
+    void onComboboxChangedSlot();//прорисовка графика ссылаясь на тип
+    void repaintCharts();//рисуем график, только если он доступен (т.е. выбран файл .sqlite .json и тип графика из имеющихся bar pie, выбор только 1го файла)
+
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    bool Colored();
 
 private:
-     QComboBox *createTypeBox();//для названий из выпад списка
+    void connectSignals();//соединение всех сигналов-слотов
+    QComboBox *createTypeBox();//для названий из выпад списка
+    void DrawChart();// рисование графика на основе выбранного файла и отметки чекбокса
 
-    QFileSystemModel *fileModel;
     QFileSystemModel *dirModel;
-    QTreeView *treeView;
     QTableView *tableView;
-    QPushButton *btnPrint;
-    QPushButton *btnDirectory;
-    QCheckBox *checkbox;
-    QComboBox *combobox;
     QLabel *label, *label_path;
 
     //раскладки
     QVBoxLayout *VertLayout;
     QHBoxLayout *HorizLayout;
-    //раскладки
-        QHBoxLayout *HParent;
-        QHBoxLayout *layoutWidgetH;
-        QVBoxLayout *layoutFileV;
-        QVBoxLayout *verticalL;
-        QVBoxLayout *verticalR;
-        QHBoxLayout *horizWrapper;
+    QHBoxLayout *HParent;
+    QHBoxLayout *layoutWidgetH;
+    QVBoxLayout *layoutFileV;
+    QVBoxLayout *verticalL;
+    QVBoxLayout *verticalR;
+    QHBoxLayout *horizWrapper;
 
+    //Разделители
     QSplitter* splitterL= new QSplitter(Qt::Horizontal);
     QSplitter* splitterR = new QSplitter(Qt::Vertical);;
 
-    //DataTable new_dataTable; //табличное представление
+    //Виджеты
+    //кнопки, комбокс, чекбокс, лейбл
     QComboBox *typeChart; //список- тип графика
     QCheckBox *BlackWhiteCheck; //чекбокс черно-белый
     QPushButton *printChart;//кнопка печати
     QLabel * typeChart_label;//для подписик к списку
+    QPushButton *btnDirectory;//кнопка выбор директории
 
-    QChartView *chartView;
+    QString currentPath;//путь корневой папки
+    QString filePath;
+    QChartView *chartView;//представление графика
     QChart* chart;
 
-    bool isChartAvailable = false;
+    bool AvailableGraph = false;
 };
 
 #endif // MAINWINDOW_H

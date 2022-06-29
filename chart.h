@@ -5,72 +5,43 @@
 #include<QBarSeries>
 #include <QtCharts/QBarSet>
 #include<QChart>
-#include "IOC.h"
 #include <QString>
 #include <QPair>
 #include <QVector>
 #include<QChartView>
 #include <QtCharts/QStackedBarSeries>
-#include"DatabaseJson.h"
-
-//typedef QPair<QString,double> Data_;//из контейнерa берем
-//typedef QVector< QPair<float,QString> > ContainerData_;
-//using Containerdata_ = QVector< QPair<QString, double> >;
-
+#include"DatabaseJson.h"//подкл, чтоб построение графиков было на основе входных данных
 
 // Определяем классы работы с графиками так, как показано на примерах в файле с ioc контейнером moodle
-//определяем интерфейс
+//определяем общий интерфейс
 class IntrfaceDraw
 
 {
 private:
-   Containerdata_ data_;
+   Containerdata_ data_;// данные для графика вектор пары [значение,дата]
+   QChart* chart = new QChart();//создание графика
 public:
 
     virtual ~IntrfaceDraw()=default;
-    virtual QChart* Draw(const Containerdata_& data_) = 0;//построение графика на основе входных данных (бд,json)
-    virtual QChart *getChart() = 0;
+    virtual void Draw(const Containerdata_& data_, bool isBW) = 0;//построение графика на основе входных данных (бд,json) и цвет чб
+    QChart *getChart() {return chart;}//получение графика
+    void ClearChart();//очистка серий
 
 };
 
 
 class createPieChart: public IntrfaceDraw
 {
-    bool BlackWhiteCheck=false;
-    QChartView *chartView=nullptr;
-    QChart* chart = new QChart();
 public:
     ~createPieChart() = default;
-    QChart* Draw(const Containerdata_& data_) override;
-    QChart *getChart() {return chart;}
-
+    void Draw(const Containerdata_& data_, bool isBW) override;//построение графика типа pie
 };
 
 class createBarChart: public IntrfaceDraw
 {
-    bool BlackWhiteCheck=false;
-    QChartView *chartView=nullptr;
-   QChart* chart = new QChart();
 public:
     ~createBarChart() = default;
-    QChart* Draw(const Containerdata_& data_) override;
-    QChart *getChart() {return chart;}
+    void Draw(const Containerdata_& data_, bool isBW) override;//построение графика типа bar
 };
-
-
-class Chart
-{
-public:
-
-    Chart() = default;
-    virtual ~Chart() = default;
-
-    QChart* getChart();
-
-    void drawingChart(const QString& title, const Containerdata_& data);//рисование графика на основе переданных данных
-    void ReDrawingChart(); //перерисовка графика
-
-};
-
 
 #endif // CHART_H
